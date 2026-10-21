@@ -343,7 +343,7 @@ button[disabled]{opacity:.45;cursor:not-allowed}
 <script>
 'use strict';
 /* ===== Reseller Profit Tracker — QaisarDigital ===== */
-const APP = {name:'Reseller Profit Tracker', studio:'QaisarDigital', version:'1.0.0', key:'qd_res_v1', photoDB:'qd_res_photos'};
+const APP = {name:'Reseller Profit Tracker', studio:'QaisarDigital', version:'1.0.1', key:'qd_res_v1', photoDB:'qd_res_photos'};
 
 /* ---------- icons ---------- */
 const IP = {
@@ -1118,10 +1118,10 @@ ACT.expEdit = id => {
   const e = DB.expenses.find(x=>x.id===id) || {id:'', date:todayKey(), cat:EXP_CATS[0], text:'', amount:''};
   const cats=[...new Set([...EXP_CATS, ...DB.expenses.map(x=>x.cat)])];
   const ov = modal(id?'Edit expense':'Add an expense', `<div class="grid g2 sec big-in"><div><label class="f">Amount *</label><input type="number" inputmode="decimal" id="ex-a" min="0" step="0.01" value="${esc(e.amount)}" placeholder="0.00"></div><div><label class="f">Date</label><input type="date" id="ex-d" value="${e.date}"></div></div>
-    <div class="sec"><label class="f">Category</label><div class="chips" id="ex-c">${cats.map(c=>`<button type="button" class="chip ${e.cat===c?'on':''}" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div></div>
+    <div class="sec"><label class="f">Category</label><div class="chips" id="ex-c">${cats.map(c=>`<button type="button" class="chip ${e.cat===c?'on':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div></div>
     <div class="sec"><label class="f">What was it?</label><input type="text" id="ex-t" value="${esc(e.text)}" placeholder="Poly mailers (100)"></div>`,
     `${id?`<button class="btn danger ghost" data-del style="margin-right:auto">Delete</button>`:''}<button class="btn" data-c>Cancel</button><button class="btn pri" data-s>Save</button>`);
-  let cat=e.cat; $('#ex-c',ov).onclick = ev => { const b=ev.target.closest('.chip'); if(!b) return; ev.preventDefault(); cat=b.dataset.c; $$('#ex-c .chip',ov).forEach(x=>x.classList.toggle('on',x===b)); };
+  let cat=e.cat; $('#ex-c',ov).onclick = ev => { const b=ev.target.closest('.chip'); if(!b) return; ev.preventDefault(); cat=b.dataset.cat; $$('#ex-c .chip',ov).forEach(x=>x.classList.toggle('on',x===b)); };
   $('[data-c]',ov).onclick = closeModal;
   if (id) $('[data-del]',ov).onclick = () => { DB.expenses=DB.expenses.filter(x=>x.id!==id); save(); closeModal(); render(); toast('Deleted', ()=>{ DB.expenses.push(e); save(); render(); }); };
   $('[data-s]',ov).onclick = () => { const a=num($('#ex-a',ov).value); if (!(a>0)) { toast('Enter an amount above 0'); return $('#ex-a',ov).focus(); }
